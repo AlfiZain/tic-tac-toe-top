@@ -65,3 +65,8 @@ main {
 .board-cell:active {
   background-color: var(--color-surface-active);
 }
+
+.board-cell:disabled {
+  color: inherit;
+  cursor: not-allowed;
+}

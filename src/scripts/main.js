@@ -127,6 +127,7 @@ const GameController = (function () {
 })();
 
 const DisplayController = (function () {
+  const boardEl = document.querySelector('.board');
   const boardCellsEl = document.querySelectorAll('.board-cell');
 
   const renderCells = () => {
@@ -134,8 +135,24 @@ const DisplayController = (function () {
 
     boardCellsEl.forEach((cell, index) => {
       cell.textContent = boardState[index];
+      if (!(boardState[index] === null)) {
+        cell.disabled = true;
+      }
     });
   };
 
+  const handleCellClick = (e) => {
+    if (!e.target.matches('.board-cell')) return;
+
+    const cellIndex = e.target.dataset.cellIndex;
+
+    GameController.play(cellIndex);
+    DisplayController.renderCells();
+  };
+
+  boardEl.addEventListener('click', (e) => handleCellClick(e));
+
   return { renderCells };
 })();
+
+GameController.newGame();
