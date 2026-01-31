@@ -67,8 +67,6 @@ main {
   cursor: pointer;
   border-radius: 6px;
   border: none;
-  background-color: var(--color-primary);
-  color: white;
 }
 
 .controls button:disabled {
@@ -144,7 +142,10 @@ main {
   font-weight: bold;
 }
 
-.result-text {
+.text-info {
+  background-color: var(--color-surface);
+  padding: 1rem;
+  border-radius: 10px;
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
@@ -221,6 +222,7 @@ menu button {
 
 .btn-secondary {
   background-color: var(--color-secondary);
+  color: var(--color-text-light);
 }
 
 .btn-secondary:hover {
