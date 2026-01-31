@@ -125,3 +125,17 @@ const GameController = (function () {
     getGameStatus,
   };
 })();
+
+const DisplayController = (function () {
+  const boardCellsEl = document.querySelectorAll('.board-cell');
+
+  const renderCells = () => {
+    const boardState = Gameboard.getBoardState();
+
+    boardCellsEl.forEach((cell, index) => {
+      cell.textContent = boardState[index];
+    });
+  };
+
+  return { renderCells };
+})();
