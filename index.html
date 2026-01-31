@@ -10,6 +10,14 @@
   <body>
     <main>
       <h1>Tic Tac Toe</h1>
+
+      <!-- Game Controls -->
+      <div class="controls">
+        <button id="start-game-btn" class="btn-primary">Start New Game</button>
+        <button id="rematch-btn" class="btn-secondary" disabled>Rematch</button>
+      </div>
+
+      <!-- Game Board -->
       <div class="board">
         <button class="board-cell" data-cell-index="0"></button>
         <button class="board-cell" data-cell-index="1"></button>
@@ -21,6 +29,45 @@
         <button class="board-cell" data-cell-index="7"></button>
         <button class="board-cell" data-cell-index="8"></button>
       </div>
+
+      <!-- Scoreboard -->
+      <section class="scoreboard">
+        <div class="player-score active" id="player1-score">
+          <span class="player-name" id="player1-display">Player 1 (X)</span>
+          <span class="score" id="player1-points">0</span>
+        </div>
+
+        <div class="player-score" id="player2-score">
+          <span class="player-name" id="player2-display">Player 2 (O)</span>
+          <span class="score" id="player2-points">0</span>
+        </div>
+      </section>
+
+      <p id="game-result" class="result-text">Let's Start The Game</p>
     </main>
+
+    <!-- Player name dialog -->
+    <dialog id="player-dialog">
+      <form id="player-form" class="player-form">
+        <h2>Player Names</h2>
+
+        <label>
+          Player 1 Name (X)
+          <input type="text" id="player1-name" required />
+        </label>
+
+        <label>
+          Player 2 Name (O)
+          <input type="text" id="player2-name" required />
+        </label>
+
+        <menu>
+          <button type="button" id="cancel-btn" class="btn-neutral">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary">Start Game</button>
+        </menu>
+      </form>
+    </dialog>
   </body>
 </html>
