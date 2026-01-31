@@ -1,0 +1,67 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+button {
+  font-size: inherit;
+}
+
+:root {
+  --color-surface: #fafafa;
+  --color-surface-hover: #dddddd;
+  --color-surface-active: #bbbbbb;
+  --color-background: #efefef;
+  --color-border: #1a1a1a;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+}
+
+body {
+  background-color: var(--color-background);
+}
+
+main {
+  max-width: 800px;
+  margin: 16px auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.board {
+  width: 300px;
+  height: 300px;
+  background-color: var(--color-surface);
+  font-size: 3rem;
+  font-weight: 700;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  box-shadow: 1px 1px 4px var(--color-shadow);
+}
+
+.board-cell {
+  border: 1px solid var(--color-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.board-cell:hover,
+.board-cell:focus {
+  background-color: var(--color-surface-hover);
+}
+
+.board-cell:active {
+  background-color: var(--color-surface-active);
+}
