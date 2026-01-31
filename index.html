@@ -32,7 +32,7 @@
 
       <!-- Scoreboard -->
       <section class="scoreboard">
-        <div class="player-score active" id="player1-score">
+        <div class="player-score" id="player1-score">
           <span class="player-name" id="player1-display">Player 1 (X)</span>
           <span class="score" id="player1-points">0</span>
         </div>
@@ -43,7 +43,7 @@
         </div>
       </section>
 
-      <p id="game-result" class="result-text">Let's Start The Game</p>
+      <p id="text-info" class="text-info">Let's Start The Game</p>
     </main>
 
     <!-- Player name dialog -->
@@ -53,12 +53,12 @@
 
         <label>
           Player 1 Name (X)
-          <input type="text" id="player1-name" required />
+          <input type="text" id="player1-name" maxlength="12" required />
         </label>
 
         <label>
           Player 2 Name (O)
-          <input type="text" id="player2-name" required />
+          <input type="text" id="player2-name" maxlength="12" required />
         </label>
 
         <menu>
