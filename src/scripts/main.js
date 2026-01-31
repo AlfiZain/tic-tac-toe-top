@@ -3,7 +3,10 @@ const Gameboard = (function () {
 
   const getBoardState = () => [...boardState];
   const setCell = (index, value) => {
-    if (index < 0 || index > 8 || boardState[index]) return false;
+    if (index < 0 || index > 8) return false;
+    if (boardState[index]) return false;
+    if (value !== 'X' && value !== 'O') return false;
+
     boardState[index] = value;
     return true;
   };
@@ -44,9 +47,9 @@ const GameController = (function () {
     [2, 4, 6],
   ];
 
-  const newGame = () => {
-    player1 = createPlayer('Alpha', 'X');
-    player2 = createPlayer('Beta', 'O');
+  const newGame = (player1Name, player2Name) => {
+    player1 = createPlayer(player1Name, 'X');
+    player2 = createPlayer(player2Name, 'O');
     currentPlayer = player1;
     winner = null;
     isGameOver = false;
@@ -54,6 +57,8 @@ const GameController = (function () {
   };
 
   const rematch = () => {
+    if (!player1 || !player2) return;
+
     currentPlayer = player1;
     winner = null;
     isGameOver = false;
@@ -61,7 +66,7 @@ const GameController = (function () {
   };
 
   const play = (index) => {
-    if (isGameOver) return;
+    if (!currentPlayer || isGameOver) return;
 
     if (!Gameboard.setCell(index, currentPlayer.getSymbol())) return;
     checkGameStatus();
@@ -106,10 +111,13 @@ const GameController = (function () {
     },
   ];
 
-  const getCurrentPlayer = () => ({
-    name: currentPlayer.name,
-    symbol: currentPlayer.getSymbol(),
-  });
+  const getCurrentPlayer = () => {
+    if (!currentPlayer) return null;
+    return {
+      name: currentPlayer.name,
+      symbol: currentPlayer.getSymbol(),
+    };
+  };
 
   const getGameStatus = () => ({
     isGameOver,
@@ -129,30 +137,110 @@ const GameController = (function () {
 const DisplayController = (function () {
   const boardEl = document.querySelector('.board');
   const boardCellsEl = document.querySelectorAll('.board-cell');
+  const startGameBtn = document.querySelector('#start-game-btn');
+  const rematchBtn = document.querySelector('#rematch-btn');
+  const playerDialog = document.querySelector('#player-dialog');
+  const playerForm = document.querySelector('#player-form');
+  const cancelBtn = document.querySelector('#cancel-btn');
+  const player1Score = document.querySelector('#player1-score');
+  const player2Score = document.querySelector('#player2-score');
+  const player1Display = document.querySelector('#player1-display');
+  const player2Display = document.querySelector('#player2-display');
+  const player1Points = document.querySelector('#player1-points');
+  const player2Points = document.querySelector('#player2-points');
+  const textInfo = document.querySelector('#text-info');
 
   const renderCells = () => {
     const boardState = Gameboard.getBoardState();
+    const { isGameOver } = GameController.getGameStatus();
 
     boardCellsEl.forEach((cell, index) => {
       cell.textContent = boardState[index];
-      if (!(boardState[index] === null)) {
-        cell.disabled = true;
-      }
+      cell.disabled = boardState[index] !== null || isGameOver;
     });
+  };
+
+  const renderGameState = () => {
+    const [player1, player2] = GameController.getPlayersInfo();
+    const currentPlayer = GameController.getCurrentPlayer();
+    const { isGameOver, winner } = GameController.getGameStatus();
+
+    rematchBtn.disabled = !isGameOver;
+
+    if (!currentPlayer) {
+      player1Score.classList.remove('active');
+      player2Score.classList.remove('active');
+    } else if (currentPlayer.name === player1.name) {
+      player1Score.classList.add('active');
+      player2Score.classList.remove('active');
+    } else {
+      player2Score.classList.add('active');
+      player1Score.classList.remove('active');
+    }
+
+    player1Display.textContent = `${player1.name} (X)`;
+    player2Display.textContent = `${player2.name} (O)`;
+
+    player1Points.textContent = player1.score;
+    player2Points.textContent = player2.score;
+
+    if (!currentPlayer) {
+      textInfo.textContent = 'Please start the game';
+    } else if (winner) {
+      textInfo.textContent = `${winner.name} (${winner.symbol}) wins the game! 🎉`;
+    } else if (isGameOver) {
+      textInfo.textContent = "It's a draw!";
+    } else {
+      textInfo.textContent = `${currentPlayer.name} (${currentPlayer.symbol}) Turn`;
+    }
+  };
+
+  const render = () => {
+    renderCells();
+    renderGameState();
   };
 
   const handleCellClick = (e) => {
     if (!e.target.matches('.board-cell')) return;
+    if (!GameController.getCurrentPlayer()) return;
 
-    const cellIndex = e.target.dataset.cellIndex;
+    const cellIndex = Number(e.target.dataset.cellIndex);
 
     GameController.play(cellIndex);
-    DisplayController.renderCells();
+    render();
   };
 
-  boardEl.addEventListener('click', (e) => handleCellClick(e));
+  const handleRematchClick = () => {
+    GameController.rematch();
+    rematchBtn.disabled = true;
+    render();
+  };
 
-  return { renderCells };
+  const handlePlayerFormSubmit = (e) => {
+    e.preventDefault();
+
+    const player1Name =
+      document.querySelector('#player1-name').value.trim() || 'Player 1';
+    const player2Name =
+      document.querySelector('#player2-name').value.trim() || 'Player 2';
+
+    GameController.newGame(player1Name, player2Name);
+    playerForm.reset();
+    playerDialog.close();
+    render();
+  };
+
+  boardEl.addEventListener('click', handleCellClick);
+  startGameBtn.addEventListener('click', (e) => {
+    playerDialog.showModal();
+  });
+
+  rematchBtn.addEventListener('click', handleRematchClick);
+
+  cancelBtn.addEventListener('click', () => {
+    playerForm.reset();
+    playerDialog.close();
+  });
+
+  playerForm.addEventListener('submit', handlePlayerFormSubmit);
 })();
-
-GameController.newGame();
